@@ -1,12 +1,13 @@
-const express= require('express'),
-      bodyParser= require('body-parser'),
-      cors= require('cors'),
-      expressSession= require('express-session'),
-      con= require('./server/config/db'),
-      webRoutes= require('./server/routes/webRoutes'),
-      apiRoutes= require('./server/routes/apiRoutes');
+const express = require('express'),
+    bodyParser = require('body-parser'),
+    cors = require('cors'),
+    path = require('path'),
+    expressSession = require('express-session'),
+    con = require('./server/config/db'),
+    webRoutes = require('./server/routes/webRoutes'),
+    apiRoutes = require('./server/routes/apiRoutes');
 
-const app= express();
+const app = express();
 
 //session
 app.use(expressSession({
@@ -16,13 +17,17 @@ app.use(expressSession({
 }));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'client')));
 
-app.use('/api',apiRoutes);
-app.use('/',webRoutes);
+app.use('/api', apiRoutes);
+app.use('/', webRoutes);
 
-app.listen(3000, function() {
-    console.log('Server is running at http://localhost:3000');
+const port = process.env.PORT || 3000;
+app.listen(port, function () {
+    console.log('Server is running at http://localhost:' + port);
 });
